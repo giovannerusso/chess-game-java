@@ -25,15 +25,16 @@ public class ChessMatch {
         return mat; // Retorna a matriz de peças da partida de xadrez
     }
 
-    public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) { //Realiza a jogada
+    public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) { //Realiza a jogada da peça de xadrez
         Position source = sourcePosition.toPosition();
         Position target = targetPosition.toPosition();
         validateSourcePosition(source);
+        validadeTargetPosition(source, target);
         Piece capturedPiece = makeMove(source, target);
         return (ChessPiece) capturedPiece;
     }
 
-    private Piece makeMove(Position source, Position target) { //Realiza o movimento da peça
+    private Piece makeMove(Position source, Position target) { //Realiza o movimento da peça na matriz do tabuleiro
         Piece p = board.removePiece(source);
         Piece capturedPiece = board.removePiece(target);
         board.placePiece(p, target);
@@ -46,6 +47,12 @@ public class ChessMatch {
         }
         if (!board.piece(position).isThereAnyPossibleMove()) {
             throw new ChessException("There is no possible moves for the chosen piece.");
+        }
+    }
+
+    private void validadeTargetPosition(Position source, Position target) {
+        if (!board.piece(source).possibleMove(target)) {
+            throw new ChessException("The chosen piece can't move to target position.");
         }
     }
 
